@@ -1,81 +1,145 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Card from '../components/Card.astro';
+import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Welcome to Astro.">
-	<main>
-		<h1>Welcome to <span class="text-gradient">Astro</span></h1>
-		<p class="instructions">
-			To get started, open the directory <code>src/pages</code> in your project.<br />
-			<strong>Code Challenge:</strong> Tweak the "Welcome to Astro" message above.
-		</p>
-		<ul role="list" class="link-card-grid">
-			<Card
-				href="https://docs.astro.build/"
-				title="Documentation"
-				body="Learn how Astro works and explore the official API docs."
-			/>
-			<Card
-				href="https://astro.build/integrations/"
-				title="Integrations"
-				body="Supercharge your project with new frameworks and libraries."
-			/>
-			<Card
-				href="https://astro.build/themes/"
-				title="Themes"
-				body="Explore a galaxy of community-built starter themes."
-			/>
-			<Card
-				href="https://astro.build/chat/"
-				title="Community"
-				body="Come say hi to our amazing Discord community. ❤️"
-			/>
-		</ul>
-	</main>
+  <main>
+    <h1 style="text-align:center;">
+      Easy <span class="text-gradient">Color Schemes</span>
+    </h1>
+    <p class="instructions" style="text-align:center">
+      Generate random color schemes with the <code>chroma.js</code> library. <br
+      />
+    </p>
+
+    <button onclick="randomizeColor()">Randomzie</button>
+    <h2>HEX codes</h2>
+    <div id="color-scheme"></div>
+    <h2>.scss variables</h2>
+    <div>
+      <pre
+        style="background:#d5d5d5; padding:8px;"><code id="color-scheme-scss-variables" /></pre>
+    </div>
+    <button onclick="copyVars()">Copy SCSS Colors</button>
+  </main>
 </Layout>
 
+<script is:inline>
+  //Function to generate a color scheme based on a base color
+  function generateColorScheme(baseColor, mode = "lch", numberOfColors = 5) {
+    const color = chroma(baseColor);
+    const colors = [color];
+
+    for (let i = 1; i < numberOfColors; i++) {
+      const newColor = color.set(mode + ".h", `+${(360 / numberOfColors) * i}`);
+      colors.push(newColor);
+    }
+
+    return colors.map((color) => color.hex());
+  }
+
+  // Usage example:
+  const baseColor = "#0acd00";
+  const colorScheme = generateColorScheme(baseColor);
+  console.log(colorScheme);
+
+  // Output:
+  // [ '#3498db', '#4b9bda', '#62a0d9', '#79a5d8', '#90aad7' ]
+
+  document.getElementById("color-scheme").innerHTML = colorScheme
+    .map(
+      (color) =>
+        `<div style="background-color: ${color}; width: 100px; height: 100px;"><p style="text-align:center;">${color}</p></div>`
+    )
+    .join("");
+
+  //Set the colors to css variables by appending $ to the color name and listing them as base, secondary, tertiary, etc.
+  document.getElementById("color-scheme-scss-variables").innerHTML = colorScheme
+    .map((color, index) => `$color-${index}: ${color};<br />`)
+    .join("");
+
+  //Fuction to randomize the base color and rerun the color scheme
+  function randomizeColor() {
+    const color = chroma.random();
+    const colorScheme = generateColorScheme(color);
+    document.getElementById("color-scheme").innerHTML = colorScheme
+      .map(
+        (color) =>
+          `<div style="background-color: ${color}; width: 100px; height: 100px;"><p style="text-align:center;">${color}</p></div>`
+      )
+      .join("");
+
+    //Set the colors to css variables by appending $ to the color name and listing them as base, secondary, tertiary, etc.
+    document.getElementById("color-scheme-scss-variables").innerHTML =
+      colorScheme
+        .map((color, index) => `$color-${index}: ${color};<br />`)
+        .join("");
+  }
+  function copyVars() {
+    const div = document.getElementById("color-scheme-scss-variables");
+    const text = div.textContent || div.innerText;
+
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textArea);
+  }
+</script>
+
 <style>
-	main {
-		margin: auto;
-		padding: 1.5rem;
-		max-width: 60ch;
-	}
-	h1 {
-		font-size: 3rem;
-		font-weight: 800;
-		margin: 0;
-	}
-	.text-gradient {
-		background-image: var(--accent-gradient);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		background-size: 400%;
-		background-position: 0%;
-	}
-	.instructions {
-		line-height: 1.6;
-		margin: 1rem 0;
-		border: 1px solid rgba(var(--accent), 25%);
-		background-color: white;
-		padding: 1rem;
-		border-radius: 0.4rem;
-	}
-	.instructions code {
-		font-size: 0.875em;
-		font-weight: bold;
-		background: rgba(var(--accent), 12%);
-		color: rgb(var(--accent));
-		border-radius: 4px;
-		padding: 0.3em 0.45em;
-	}
-	.instructions strong {
-		color: rgb(var(--accent));
-	}
-	.link-card-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
-		gap: 1rem;
-		padding: 0;
-	}
+  main {
+    margin: auto;
+    padding: 1.5rem;
+    max-width: 500px;
+  }
+  h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin: 0;
+  }
+  #color-scheme {
+    display: flex;
+    flex-direction: row;
+  }
+  #color-scheme-info {
+    display: flex;
+  }
+  button {
+    margin-bottom: 20px;
+  }
+
+  .text-gradient {
+    background-image: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 400%;
+    background-position: 0%;
+  }
+  .instructions {
+    line-height: 1.6;
+    margin: 1rem 0;
+    border: 1px solid rgba(var(--accent), 25%);
+    background-color: white;
+    padding: 1rem;
+    border-radius: 0.4rem;
+  }
+  .instructions code {
+    font-size: 0.875em;
+    font-weight: bold;
+    background: rgba(var(--accent), 12%);
+    color: rgb(var(--accent));
+    border-radius: 4px;
+    padding: 0.3em 0.45em;
+  }
+  .instructions strong {
+    color: rgb(var(--accent));
+  }
+  .link-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+    gap: 1rem;
+    padding: 0;
+  }
 </style>
