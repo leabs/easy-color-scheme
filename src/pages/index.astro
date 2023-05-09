@@ -1,5 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Variables from "../components/Variables.astro";
+import Favorites from "../components/Favorites.astro";
+import ColorWrapper from "../components/ColorWrapper.astro";
 ---
 
 <!--TO DO:
@@ -16,28 +19,14 @@ import Layout from "../layouts/Layout.astro";
       Easy <span class="text-gradient">Color Schemes</span>
     </h1>
     <div style="text-align: center">
-      <button style="padding:16px;" onclick="randomizeColor()">Randomzie</button>
+      <button style="padding:16px;" onclick="randomizeColor()">Randomzie</button
+      >
     </div>
-    <h2>HEX codes</h2>
-    <div id="color-scheme"></div>
-    <h2>CSS variables</h2>
-    <div>
-      <pre
-        style="background:#d5d5d5; padding:8px;"><code id="color-scheme-css-variables" /></pre>
-    </div>
-    <button onclick="copyCSS()">Copy CSS Colors</button>
-    <h2>SCSS variables</h2>
-    <div>
-      <pre
-        style="background:#d5d5d5; padding:8px;"><code id="color-scheme-scss-variables" /></pre>
-    </div>
-    <button onclick="copySCSS()">Copy SCSS Colors</button>
-    <h2>Sass variables</h2>
-    <div>
-      <pre
-        style="background:#d5d5d5; padding:8px;"><code id="color-scheme-sass-variables" /></pre>
-    </div>
-    <button onclick="copySass()">Copy Sass Colors</button>
+
+    <br />
+    <Variables />
+    <!-- <Favorites />
+    <ColorWrapper /> -->
   </main>
 </Layout>
 
@@ -66,7 +55,7 @@ import Layout from "../layouts/Layout.astro";
   document.getElementById("color-scheme").innerHTML = colorScheme
     .map(
       (color) =>
-        `<div style="background-color: ${color}; width: 100px; height: 100px;"><p style="margin: 0;text-align:center; font-size:14px; line-height:100px;">${color}</p></div>`
+        `<div style="background-color: ${color}; width: 160px; height: 100px; cursor: pointer"><p class="hex-div" style="margin: 0;text-align:center; font-size:14px; line-height:100px;">${color}</p></div>`
     )
     .join("");
 
@@ -92,7 +81,7 @@ import Layout from "../layouts/Layout.astro";
     document.getElementById("color-scheme").innerHTML = colorScheme
       .map(
         (color) =>
-          `<div style="background-color: ${color}; width: 100px; height: 100px;"><p style="margin: 0;text-align:center; font-size:14px; line-height:100px;">${color}</p></div>`
+          `<div style="background-color: ${color}; cursor: pointer; width: 160px; height: 100px;"><p class="hex-div"  style="margin: 0;text-align:center; font-size:14px; line-height:100px;">${color}</p></div>`
       )
       .join("");
 
@@ -147,25 +136,42 @@ import Layout from "../layouts/Layout.astro";
     document.execCommand("copy");
     document.body.removeChild(textArea);
   }
+
+  //Clicking on .hex-div copies the inner text to the clipboard
+  document.addEventListener("click", function (e) {
+    if (e.target && e.target.classList.contains("hex-div")) {
+      const text = e.target.innerText;
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
+    }
+  });
+
+  //Once a .hex-div is clicked, pop up to let user know it was copied by replacing the .hex-div text with copied for 2 seconds then reverting back to the original text
+  document.addEventListener("click", function (e) {
+    if (e.target && e.target.classList.contains("hex-div")) {
+      const text = e.target.innerText;
+      e.target.innerText = "Copied!";
+      setTimeout(function () {
+        e.target.innerText = text;
+      }, 1000);
+    }
+  });
 </script>
 
 <style>
   main {
     margin: auto;
     padding: 1.5rem;
-    max-width: 500px;
+    max-width: 800px;
   }
   h1 {
     font-size: 3rem;
     font-weight: 800;
     margin: 0;
-  }
-  #color-scheme {
-    display: flex;
-    flex-direction: row;
-  }
-  #color-scheme-info {
-    display: flex;
   }
   button {
     margin-bottom: 20px;

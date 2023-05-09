@@ -1,0 +1,31 @@
+---
+//JSON object of multiple colors
+const favorites = [
+    ["#333330", "#444440", "#555550", "#666660", "#777770"],
+    ["#888880", "#999990", "#aaaaa0", "#bbbbb0", "#ccccb0"]
+];
+---
+
+<h2>Hand Picked Favorites</h2>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+   { favorites.map((fav) => (
+    <div class="color-box" style="background-color: {fav}">
+        { fav }
+    </div>
+  )) }
+</div>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+    <!--Map out all -->
+</div>
+
+<style>
+  .color-box {
+    margin: 0;
+    height:100px;
+    width: 160px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 100px;
+  }
+</style>

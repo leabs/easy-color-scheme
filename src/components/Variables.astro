@@ -1,0 +1,54 @@
+---
+---
+
+<h2 style="margin-top:0;">Hex Values (click to copy)</h2>
+<div id="color-scheme"></div>
+
+<div class="columns">
+  <div class="column">
+    <h2>CSS variables</h2>
+    <div>
+      <pre
+        style="background:#d5d5d5; padding:8px;"><code id="color-scheme-css-variables" /></pre>
+    </div>
+    <button onclick="copyCSS()">Copy CSS Colors</button>
+  </div>
+  <div class="column">
+    <h2>SCSS variables</h2>
+    <div>
+      <pre
+        style="background:#d5d5d5; padding:8px;"><code id="color-scheme-scss-variables" /></pre>
+    </div>
+    <button onclick="copySCSS()">Copy SCSS Colors</button>
+  </div>
+  <div class="column">
+    <h2>Sass variables</h2>
+    <div>
+      <pre
+        style="background:#d5d5d5; padding:8px;"><code id="color-scheme-sass-variables" /></pre>
+    </div>
+    <button onclick="copySass()">Copy Sass Colors</button>
+  </div>
+</div>
+
+<style>
+  .columns {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .column {
+    flex: 1;
+  }
+  #color-scheme {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  #color-scheme-info {
+    display: flex;
+  }
+  .hex {
+    width: 300px;
+  }
+</style>
